@@ -1,17 +1,17 @@
 {
-  "timestamp": "2025-06-02T04:47:46.395243",
+  "timestamp": "2025-06-02T05:44:05.969779",
   "claim": {
     "claim_id": "CLM-00017",
-    "patient_name": "John Doe",
-    "dos": "2023-01-15",
-    "cpt": "99213",
-    "icd10": "Z00.00",
-    "charges": 150.0,
-    "policy_no": "POL123456"
+    "patient_name": "JANE DOE",
+    "dos": "2025-05-22",
+    "cpt": "83036",
+    "icd10": "J02.9",
+    "charges": 185.0,
+    "policy_no": "HBC NY 4421"
   },
   "decision": {
-    "status": "APPROVE",
-    "payout": 120.0,
-    "reason": "Found CPT in auto-approve table"
+    "status": "DENY",
+    "payout": 0.0,
+    "reason": "I don't know."
   }
 }

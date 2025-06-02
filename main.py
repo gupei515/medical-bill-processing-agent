@@ -50,25 +50,33 @@ schema_prompt = ChatPromptTemplate.from_messages([
     ("human", "{ocr_text}")
 ])
 
-extract_chain = LLMChain(llm=llm, prompt=schema_prompt)
+extract_chain = schema_prompt | llm
 
 def ingest_agent() -> Dict[str, Any]:
     ocr = load_next_pdf()
+    print(f"[Debug] OCR text: {ocr}")
+    print("🔍 [LINE 60] About to invoke AI extraction...")
     result = extract_chain.invoke({"ocr_text": ocr})
-    # The result is a dict with 'text' key containing the JSON string
+    # The result is now a message object with 'content' attribute
     print(f"[Debug] LLM result: {result}")
     
-    # Try to extract the text content
-    if isinstance(result, dict):
-        if 'text' in result:
-            text_content = result['text']
-        else:
-            # Sometimes the result might be directly in the dict
-            text_content = str(result)
+    # Extract the content from the new LangChain result format
+    if hasattr(result, 'content'):
+        text_content = result.content
+    elif isinstance(result, dict) and 'text' in result:
+        text_content = result['text']
     else:
         text_content = str(result)
     
     print(f"[Debug] Text to parse: {text_content}")
+    
+    # Remove markdown code blocks if present
+    if text_content.startswith('```json') and text_content.endswith('```'):
+        text_content = text_content[7:-3].strip()  # Remove ```json and ```
+    elif text_content.startswith('```') and text_content.endswith('```'):
+        text_content = text_content[3:-3].strip()  # Remove ``` and ```
+    
+    print(f"[Debug] Cleaned text to parse: {text_content}")
     
     try:
         return json.loads(text_content)
@@ -98,7 +106,7 @@ def decision_tool(parsed: Dict[str, Any]) -> Dict[str, Any]:
         payout = parsed["charges"] * 0.8
         reason = "Found CPT in auto-approve table"
     else:
-        answer = qa.invoke({"question": f"Is {parsed['cpt']} covered for {parsed['patient_name']}?"})
+        answer = qa.invoke({"query": f"Is {parsed['cpt']} covered for {parsed['patient_name']}?"})
         approve = re.search(r"\byes\b", answer["result"], re.I)
         status = "APPROVE" if approve else "DENY"
         payout = parsed["charges"] * (0.8 if approve else 0)

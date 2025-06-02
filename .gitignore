@@ -129,8 +129,4 @@ dmypy.json
 .pyre/
 
 # Project specific
-*.pdf
-*.txt
-incoming_claims/
-processed_claims/
-logs/ 
+

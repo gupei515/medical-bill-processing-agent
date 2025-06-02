@@ -1,0 +1,11 @@
+# ICD-10 codes with coverage guidance – one entry per line
+J02.9 | Acute pharyngitis, unspecified | Routine sore-throat visit (CPT 99213/99214) auto-approve; no pre-auth required, standard 80 % payout.
+E11.9 | Type 2 diabetes mellitus w/o complications | Annual E/M + HbA1c labs (CPT 83036) covered; endocrinology consults allowed twice / year.
+I10 | Essential (primary) hypertension | Office follow-up visits covered; home BP monitor DME needs separate policy rider.
+S93.402A | Sprain, left ankle (unspecified ligament), initial | Urgent-care eval + ankle X-ray (CPT 73610) covered; PT limited to 10 visits w/o prior auth.
+M54.5 | Low back pain | Out-patient visit covered; MRI only after 6 weeks conservative therapy unless red-flag symptoms.
+Z23 | Encounter for immunization | Vaccine admin (CPT 90471/90472) always covered; vaccine cost per CDC/VFC rules.
+N39.0 | Urinary tract infection, site NOS | Eval visit + urine culture (CPT 87086) covered; repeat visit ≤ 14 days flagged for review.
+J06.9 | Acute upper respiratory infection, unspecified | Standard office evaluation covered; antibiotic reimbursement needs positive culture note.
+R07.9 | Chest pain, unspecified | ED eval (CPT 99284-99285) covered; stress test needs cardiology consult if patient < 35 y.
+K52.9 | Noninfective gastroenteritis/colitis, unspecified | Office visit + CMP labs covered; colonoscopy not indicated unless alarm features.

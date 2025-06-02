@@ -1,0 +1,17 @@
+{
+  "timestamp": "2025-06-02T04:47:46.395243",
+  "claim": {
+    "claim_id": "CLM-00017",
+    "patient_name": "John Doe",
+    "dos": "2023-01-15",
+    "cpt": "99213",
+    "icd10": "Z00.00",
+    "charges": 150.0,
+    "policy_no": "POL123456"
+  },
+  "decision": {
+    "status": "APPROVE",
+    "payout": 120.0,
+    "reason": "Found CPT in auto-approve table"
+  }
+}

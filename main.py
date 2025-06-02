@@ -1,21 +1,21 @@
 from __future__ import annotations
 import json, os, sys, time, traceback, logging
-import glob, fitz 
+import glob, fitz, re
 from datetime import datetime
 from typing import Optional, Dict, Any, List, Tuple
 
 
 from langchain_openai import ChatOpenAI
-from langchain.embeddings.openai import OpenAIEmbeddings
+from langchain_community.embeddings import OpenAIEmbeddings
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain.vectorstores import FAISS
+from langchain_community.vectorstores import FAISS
 from langchain.chains import LLMChain, RetrievalQA
 from langchain.prompts import ChatPromptTemplate
-from langchain.output_parsers import StrOutputParser
+from langchain_core.output_parsers import StrOutputParser
 from langchain.schema import BaseRetriever
 
 # Import the reasoning module
-from reason_decide import create_reasoning_agent
+# from reason_decide import create_reasoning_agent
 
 llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
 embeddings = OpenAIEmbeddings()
@@ -25,6 +25,9 @@ db = FAISS(
     open("knowledge/icd10_knowledge.txt").read().splitlines(),
     embeddings,
 )
+
+# Create QA chain
+qa = RetrievalQA.from_chain_type(llm=llm, retriever=db.as_retriever())
 
 #load pdf and get text
 def load_next_pdf() -> str:
@@ -59,14 +62,14 @@ def basic_coverage_check(parsed: Dict[str, Any]) -> str:
 
 def decision_tool(parsed: Dict[str, Any]) -> Dict[str, Any]:
     status = basic_coverage_check(parsed)
-    if status === "APPROVE":
-        payout =  parsed["charges"] * 0.8
+    if status == "APPROVE":
+        payout = parsed["charges"] * 0.8
         reason = "Found CPT in auto-approve table"
-    else
+    else:
         answer = qa.invoke({"question": f"Is {parsed['cpt']} covered for {parsed['patient_name']}?"})
-        approve = re.search(r"\byes\b", answer["result"], re.I)；
+        approve = re.search(r"\byes\b", answer["result"], re.I)
         status = "APPROVE" if approve else "DENY"
-        payout = parse["charges"] * (0.8 if approve else 0)
+        payout = parsed["charges"] * (0.8 if approve else 0)
         reason = answer["result"]
     return {"status": status, "payout": round(payout, 2), "reason": reason}
 

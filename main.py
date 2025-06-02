@@ -4,9 +4,11 @@ import glob, fitz, re
 from datetime import datetime
 from typing import Optional, Dict, Any, List, Tuple
 
+# Import configuration files to set up environment
+import config
+import langchain_config
 
-from langchain_openai import ChatOpenAI
-from langchain_community.embeddings import OpenAIEmbeddings
+from langchain_openai import ChatOpenAI, OpenAIEmbeddings
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.vectorstores import FAISS
 from langchain.chains import LLMChain, RetrievalQA
@@ -21,10 +23,8 @@ llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
 embeddings = OpenAIEmbeddings()
 
 #build the vector store
-db = FAISS(
-    open("knowledge/icd10_knowledge.txt").read().splitlines(),
-    embeddings,
-)
+texts = open("kowledge/icd10_excerpt.txt").read().splitlines()
+db = FAISS.from_texts(texts, embeddings)
 
 # Create QA chain
 qa = RetrievalQA.from_chain_type(llm=llm, retriever=db.as_retriever())
